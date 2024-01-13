@@ -1,4 +1,5 @@
 import pygame, os
+from scripts.game import Game
 class App():
     def __init__(self):
         self.display_size = (480,720)
