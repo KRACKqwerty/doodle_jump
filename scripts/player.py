@@ -12,5 +12,13 @@ class Player(Sprite):
 
         self.on_platform=False
     def update(self):
+        if self.on_platform:
+            self.velocity_y=-self.jump_power
         self.velocity_y=min(self.velocity_y+self.gravity,15)
         self.rect.y+=self.velocity_y
+        if self.is_walking_right!=self.is_walking_left:
+            if self.is_walking_right:
+                self.rect.x+=self.speed
+            else:
+                self.rect.x-=self.speed
+        self.on_platform=False
