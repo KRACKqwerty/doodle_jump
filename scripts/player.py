@@ -1,4 +1,5 @@
 from scripts.sprite import Sprite
+from scripts.constants import display_size
 class Player(Sprite):
     def __init__(self, center, image, speed, jump_power, gravity):
         super().__init__(center,image)
@@ -22,3 +23,13 @@ class Player(Sprite):
             else:
                 self.rect.x-=self.speed
         self.on_platform=False
+        if self.rect.right <0:
+            self.rect.left=display_size[0]
+        if self.rect.left > display_size[0]:
+            self.rect.right=0
+        # if self.rect.bottom<0:
+        #     self.rect.top=display_size[1]
+        # if self.rect.top>display_size[1]:
+        #     self.rect.bottom=0
+    def collide_sprite(self,other):
+        return super().collide_sprite(other) and self.velocity_y>0

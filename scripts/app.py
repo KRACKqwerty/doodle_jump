@@ -1,12 +1,13 @@
 import pygame, os
+from scripts.constants import display_size
 from scripts.game import Game
 class App():
     def __init__(self):
-        self.display_size = (480,720)
+        
         self.running = True
         self.maxFPS = 60
 
-        self.display = pygame.display.set_mode(self.display_size)
+        self.display = pygame.display.set_mode(display_size)
         self.clock = pygame.time.Clock()
         self.game=Game()
 
