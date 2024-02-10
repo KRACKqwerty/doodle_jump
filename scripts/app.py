@@ -25,6 +25,8 @@ class App():
                 self.game.handle_key_up_event(event.key)
             elif event.type == CreatePlatformEvent:
                 self.game.handle_create_platform_event(event.platform)
+                
+                
 
     def update(self) -> None:
         self.game.update()
@@ -39,3 +41,4 @@ class App():
             self.render()
 
             self.clock.tick(self.maxFPS)
+            

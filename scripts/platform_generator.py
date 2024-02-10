@@ -27,6 +27,7 @@ class PlatformGenerator():
         center=(randint(min_x,max_x),center_y)
         event=pygame.Event(CreatePlatformEvent,{'platform':Platform(center,image)})
         pygame.event.post(event)
+        
     def update(self,offset_y,platforms):
         if platforms[-1].rect.centery-offset_y>=self.step:
             self.create_platform(offset_y)
