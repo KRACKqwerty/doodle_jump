@@ -15,6 +15,13 @@ class Game():
         self.font=pygame.Font(os.path.join('assets','fonts','pixel.ttf'),32)
 
         self.offset_y=0
+
+        self.jump_sound=pygame.mixer.Sound(os.path.join('assets','sounds','jump.mp3'))
+        self.falling_sound=pygame.mixer.Sound(os.path.join('assets','sounds','falling.mp3'))
+        self.breaking_sound=pygame.mixer.Sound(os.path.join('assets','sounds','platform-break.mp3'))
+        pygame.mixer.music.load(os.path.join('assets','music','caves.mp3'))
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.4)
     def render(self,surface:pygame.Surface):
         surface.blit(self.background_image, (0,0))
         for platform in self.platforms:
@@ -51,7 +58,7 @@ class Game():
         self.platforms.append(platform)
 
     def restart(self):
-
+        self.player.reset((240,600))
         self.losed=False
         self.offset_y=0
         self.platforms=list()
@@ -62,9 +69,16 @@ class Game():
         if self.losed:
             return
         self.player.update()
-        for platform in self.platforms:
+        for platform in self.platforms.copy():
+            platform.update()
             if self.player.collide_sprite(platform):
                 self.player.on_platform=True
+                if platform.type=='BreakingPlatform':
+                    self.platforms.remove(platform)
+                elif platform.type=='DisappearingPlatform':
+                    platform.player_touched=True
+            if (platform.type=='DisappearingPlatform' and platform.disappearance_time<=0):
+                self.platforms.remove(platform)
         if self.player.rect.bottom - self.offset_y<display_size[1]/3:
             self.offset_y=self.player.rect.bottom-display_size[1]/3
         if self.platforms:

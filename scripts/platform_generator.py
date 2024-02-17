@@ -1,5 +1,5 @@
 from random import *
-from scripts.platform import Platform
+from scripts.platform import Platform, BreakingPlatform, MovingPlatform, DisappearingPlatform
 import pygame
 from scripts.constants import display_size,CreatePlatformEvent
 from scripts.functions import load_image
@@ -25,7 +25,15 @@ class PlatformGenerator():
         min_x=image.get_width()//2
         max_x=display_size[0]-image.get_width()//2
         center=(randint(min_x,max_x),center_y)
-        event=pygame.Event(CreatePlatformEvent,{'platform':Platform(center,image)})
+        if number==0:
+            info={'platform':Platform(center,image)}
+        elif number ==1:
+            info={'platform':BreakingPlatform(center,image)}
+        elif number==2:
+            info={'platform':DisappearingPlatform(center,image,180+randint(0,100))}
+        elif number==3:
+            info={'platform':MovingPlatform(center,image,randint(100,300)/100)}
+        event=pygame.Event(CreatePlatformEvent,info)
         pygame.event.post(event)
         
     def update(self,offset_y,platforms):
