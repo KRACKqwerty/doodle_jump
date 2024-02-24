@@ -5,21 +5,22 @@ from scripts.functions import load_image
 from scripts.player import Player
 from scripts.platform import Platform
 from scripts.platform_generator import PlatformGenerator
+from scripts.functions import get_path
 class Game():
     def __init__(self):
-        self.background_image=pygame.image.load(os.path.join('assets','images','background.png'))
+        self.background_image=pygame.image.load(get_path('assets','images','background.png'))
         self.platform_generator = PlatformGenerator(200)
         self.player=Player((240,600),load_image('assets','images','player.png'),5,20,0.65)
         self.platforms=list()
         self.losed=False
-        self.font=pygame.Font(os.path.join('assets','fonts','pixel.ttf'),32)
+        self.font=pygame.Font(get_path('assets','fonts','pixel.ttf'),32)
 
         self.offset_y=0
 
-        self.jump_sound=pygame.mixer.Sound(os.path.join('assets','sounds','jump.mp3'))
-        self.falling_sound=pygame.mixer.Sound(os.path.join('assets','sounds','falling.mp3'))
-        self.breaking_sound=pygame.mixer.Sound(os.path.join('assets','sounds','platform-break.mp3'))
-        pygame.mixer.music.load(os.path.join('assets','music','caves.mp3'))
+        self.jump_sound=pygame.mixer.Sound(get_path('assets','sounds','jump.mp3'))
+        self.falling_sound=pygame.mixer.Sound(get_path('assets','sounds','falling.mp3'))
+        self.breaking_sound=pygame.mixer.Sound(get_path('assets','sounds','platform-break.mp3'))
+        pygame.mixer.music.load(get_path('assets','music','caves.mp3'))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.4)
     def render(self,surface:pygame.Surface):
@@ -65,7 +66,10 @@ class Game():
         self.platform_generator.create_start_configuration()
 
     def update(self):
+        prev_losed=self.losed
         self.losed = self.player.rect.top - self.offset_y >= display_size[1]
+        if not(prev_losed) and self.losed:
+            self.falling_sound.play()
         if self.losed:
             return
         self.player.update()
@@ -73,8 +77,10 @@ class Game():
             platform.update()
             if self.player.collide_sprite(platform):
                 self.player.on_platform=True
+                self.jump_sound.play()
                 if platform.type=='BreakingPlatform':
                     self.platforms.remove(platform)
+                    self.breaking_sound.play()
                 elif platform.type=='DisappearingPlatform':
                     platform.player_touched=True
             if (platform.type=='DisappearingPlatform' and platform.disappearance_time<=0):

@@ -39,4 +39,5 @@ class PlatformGenerator():
     def update(self,offset_y,platforms):
         if platforms[-1].rect.centery-offset_y>=self.step:
             self.create_platform(offset_y)
+        if platforms[0].rect.top - offset_y>=display_size[1]:
             platforms.remove(platforms[0])

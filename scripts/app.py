@@ -1,4 +1,5 @@
 import pygame, os
+from scripts.functions import load_image
 
 from scripts.constants import display_size,CreatePlatformEvent
 from scripts.game import Game
@@ -13,7 +14,7 @@ class App():
         self.game=Game()
 
         pygame.display.set_caption('Doodle Jump')
-        pygame.display.set_icon(pygame.image.load(os.path.join('assets','icons','icon.ico')))
+        pygame.display.set_icon(load_image('assets','icons','icon.ico'))
 
     def handle_events(self) -> None:
         for event in pygame.event.get():
